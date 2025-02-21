@@ -16,7 +16,7 @@ on: # You must define at least one trigger for each workflow.
     types: [opened, synchronize, reopened]
     
 jobs:
-   ir_dag:
+  ir_dag:
      runs-on: ${{ vars.RUNNER_LABEL }}
      steps:
        - name: Checkout code
