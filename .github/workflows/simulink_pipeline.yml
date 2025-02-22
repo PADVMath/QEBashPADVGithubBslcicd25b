@@ -16,9 +16,9 @@ on: # You must define at least one trigger for each workflow.
     types: [opened, synchronize, reopened]
     
 jobs:
-   ir_dag:
-     runs-on: ${{ vars.RUNNER_LABEL }}
-     steps:
+  ir_dag:
+    runs-on: ${{ vars.RUNNER_LABEL }}    
+    steps:
        - name: Checkout code
          uses: actions/checkout@v4
          with:
@@ -35,7 +35,6 @@ jobs:
            name: ir_dag
            path: |
              scm/ir_dag.json
-  
   start:
     needs: [ir_dag]
     uses: ./.github/workflows/generic-job.yml
@@ -269,10 +268,10 @@ jobs:
     uses: ./.github/workflows/generic-job.yml
     with:
       job-name: ModelTestingMetrics_OuterLoop_Control 
-  
-  padv_builtin_task_GenerateRequirementsReport_HighLevelReqs:
-    needs: [ModelTestingMetrics_AHRS_Voter, ModelTestingMetrics_Actuator_Control, padv_builtin_task_GenerateSDDReport_Flight_Control, ModelTestingMetrics_InnerLoop_Control, ModelTestingMetrics_OuterLoop_Control]
-    uses: ./.github/workflows/generic-job.yml
-    with:
+
+  padv_builtin_task_GenerateRequirementsReport_HighLevelReqs: 
+     needs: [ModelTestingMetrics_AHRS_Voter, ModelTestingMetrics_Actuator_Control, padv_builtin_task_GenerateSDDReport_Flight_Control, ModelTestingMetrics_InnerLoop_Control, ModelTestingMetrics_OuterLoop_Control]
+     uses: ./.github/workflows/generic-job.yml
+     with:
       job-name: padv_builtin_task_GenerateRequirementsReport_HighLevelReqs 
   
