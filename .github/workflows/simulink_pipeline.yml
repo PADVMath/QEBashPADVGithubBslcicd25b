@@ -35,61 +35,61 @@ jobs:
            name: ir_dag
            path: |
              scm/ir_dag.json
-  padv_builtin_task_GenerateRequirementsReport:
+   padv_builtin_task_GenerateRequirementsReport:
     needs: [ir_dag]
     uses: ./.github/workflows/generic-job.yml
     with:
       job-name: padv_builtin_task_GenerateRequirementsReport 
   
-  padv_builtin_task_GenerateSimulinkWebView:
+   padv_builtin_task_GenerateSimulinkWebView:
     needs: [padv_builtin_task_GenerateRequirementsReport]
     uses: ./.github/workflows/generic-job.yml
     with:
       job-name: padv_builtin_task_GenerateSimulinkWebView 
   
-  padv_builtin_task_RunModelStandards:
+   padv_builtin_task_RunModelStandards:
     needs: [padv_builtin_task_GenerateSimulinkWebView]
     uses: ./.github/workflows/generic-job.yml
     with:
       job-name: padv_builtin_task_RunModelStandards 
   
-  FindAcrossModelClones:
+   FindAcrossModelClones:
     needs: [padv_builtin_task_RunModelStandards]
     uses: ./.github/workflows/generic-job.yml
     with:
       job-name: FindAcrossModelClones 
   
-  FindLibraryClones:
+   FindLibraryClones:
     needs: [FindAcrossModelClones]
     uses: ./.github/workflows/generic-job.yml
     with:
       job-name: FindLibraryClones 
   
-  padv_builtin_task_GenerateModelComparison:
+   padv_builtin_task_GenerateModelComparison:
     needs: [FindLibraryClones]
     uses: ./.github/workflows/generic-job.yml
     with:
       job-name: padv_builtin_task_GenerateModelComparison 
   
-  padv_builtin_task_GenerateSDDReport:
+   padv_builtin_task_GenerateSDDReport:
     needs: [padv_builtin_task_GenerateModelComparison]
     uses: ./.github/workflows/generic-job.yml
     with:
       job-name: padv_builtin_task_GenerateSDDReport 
   
-  padv_builtin_task_RunTestsPerTestCase:
+   padv_builtin_task_RunTestsPerTestCase:
     needs: [padv_builtin_task_GenerateSDDReport]
     uses: ./.github/workflows/generic-job.yml
     with:
       job-name: padv_builtin_task_RunTestsPerTestCase 
   
-  padv_builtin_task_MergeTestResults:
+   padv_builtin_task_MergeTestResults:
     needs: [padv_builtin_task_RunTestsPerTestCase]
     uses: ./.github/workflows/generic-job.yml
     with:
       job-name: padv_builtin_task_MergeTestResults 
   
-  ModelTestingMetrics:
+   ModelTestingMetrics:
     needs: [padv_builtin_task_MergeTestResults]
     uses: ./.github/workflows/generic-job.yml
     with:
