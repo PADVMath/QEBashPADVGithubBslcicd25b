@@ -1,0 +1,97 @@
+# Copyright 2025 The MathWorks, Inc.
+# To manually execute this workflow, uncomment the 'ir_dag' job below 
+# and update the specified tokens accordingly.
+# Make sure to check out source code to a sub-directory 'scm'
+# Make sure to confiure the following variables at repository variables:
+#   PYTHON_ALIAS, SUPPORT_PACKAGE_ROOT, NETWORK_STORAGE_PATH, RUNNER_LABEL
+name: MATLAB Workflow
+on: # You must define at least one trigger for each workflow.
+  workflow_dispatch:  # Set manual triggers as an optional trigger.
+  pull_request:       # Set pull_request as an automatic trigger. 
+                      # By default, a pull_request runs when a pull_request 
+                      # event's activity type is opened, synchronize, or reopened
+    # opened: This triggers the workflow when a pull request is initially opened.
+    # synchronize: This triggers the workflow when new commits are pushed to a pull request branch. This includes any time the pull request's head branch is updated with new commits.
+    # reopened: This triggers the workflow when a previously closed pull request is reopened
+    types: [opened, synchronize, reopened]
+    
+jobs:
+   ir_dag:
+     runs-on: ${{ vars.RUNNER_LABEL }}
+     steps:
+       - name: Checkout code
+         uses: actions/checkout@v4
+         with:
+           path: ${{ vars.SCM_FOLDER || 'scm' }}
+           submodules: ${{ vars.SUBMODULES_MODE || 'false' }}
+  
+       - name: Copy ir_dag and pipeline
+         run: |
+           cp scm/.github/workflows/ir_dag.json scm/ir_dag.json
+  
+       - name: Upload ir_dag
+         uses: actions/upload-artifact@v4
+         with:
+           name: ir_dag
+           path: |
+             scm/ir_dag.json
+   padv_builtin_task_GenerateRequirementsReport:
+    needs: [ir_dag]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_GenerateRequirementsReport 
+  
+   padv_builtin_task_GenerateSimulinkWebView:
+    needs: [padv_builtin_task_GenerateRequirementsReport]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_GenerateSimulinkWebView 
+  
+   padv_builtin_task_RunModelStandards:
+    needs: [padv_builtin_task_GenerateSimulinkWebView]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_RunModelStandards 
+  
+   FindAcrossModelClones:
+    needs: [padv_builtin_task_RunModelStandards]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: FindAcrossModelClones 
+  
+   FindLibraryClones:
+    needs: [FindAcrossModelClones]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: FindLibraryClones 
+  
+   padv_builtin_task_GenerateModelComparison:
+    needs: [FindLibraryClones]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_GenerateModelComparison 
+  
+   padv_builtin_task_GenerateSDDReport:
+    needs: [padv_builtin_task_GenerateModelComparison]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_GenerateSDDReport 
+  
+   padv_builtin_task_RunTestsPerTestCase:
+    needs: [padv_builtin_task_GenerateSDDReport]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_RunTestsPerTestCase 
+  
+   padv_builtin_task_MergeTestResults:
+    needs: [padv_builtin_task_RunTestsPerTestCase]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_MergeTestResults 
+  
+   ModelTestingMetrics:
+    needs: [padv_builtin_task_MergeTestResults]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: ModelTestingMetrics 
+  

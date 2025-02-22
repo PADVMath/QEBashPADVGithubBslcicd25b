@@ -27,7 +27,7 @@ jobs:
   
        - name: Copy ir_dag and pipeline
          run: |
-           cp scm/.github/workflows/ir_dag.json scm/ir_dag.json
+           cp scm/<path/to/ir_dag.json> scm/ir_dag.json
   
        - name: Upload ir_dag
          uses: actions/upload-artifact@v4
@@ -35,63 +35,244 @@ jobs:
            name: ir_dag
            path: |
              scm/ir_dag.json
-   padv_builtin_task_GenerateRequirementsReport:
+  
+  start:
     needs: [ir_dag]
     uses: ./.github/workflows/generic-job.yml
     with:
-      job-name: padv_builtin_task_GenerateRequirementsReport 
+      job-name: start 
   
-   padv_builtin_task_GenerateSimulinkWebView:
-    needs: [padv_builtin_task_GenerateRequirementsReport]
+  padv_builtin_task_GenerateSimulinkWebView_AHRS_Voter:
+    needs: [start]
     uses: ./.github/workflows/generic-job.yml
     with:
-      job-name: padv_builtin_task_GenerateSimulinkWebView 
+      job-name: padv_builtin_task_GenerateSimulinkWebView_AHRS_Voter 
   
-   padv_builtin_task_RunModelStandards:
-    needs: [padv_builtin_task_GenerateSimulinkWebView]
+  padv_builtin_task_RunModelStandards_AHRS_Voter:
+    needs: [padv_builtin_task_GenerateSimulinkWebView_AHRS_Voter]
     uses: ./.github/workflows/generic-job.yml
     with:
-      job-name: padv_builtin_task_RunModelStandards 
+      job-name: padv_builtin_task_RunModelStandards_AHRS_Voter 
   
-   FindAcrossModelClones:
-    needs: [padv_builtin_task_RunModelStandards]
+  FindAcrossModelClones_AHRS_Voter:
+    needs: [padv_builtin_task_RunModelStandards_AHRS_Voter]
     uses: ./.github/workflows/generic-job.yml
     with:
-      job-name: FindAcrossModelClones 
+      job-name: FindAcrossModelClones_AHRS_Voter 
   
-   FindLibraryClones:
-    needs: [FindAcrossModelClones]
+  FindLibraryClones_AHRS_Voter:
+    needs: [FindAcrossModelClones_AHRS_Voter]
     uses: ./.github/workflows/generic-job.yml
     with:
-      job-name: FindLibraryClones 
+      job-name: FindLibraryClones_AHRS_Voter 
   
-   padv_builtin_task_GenerateModelComparison:
-    needs: [FindLibraryClones]
+  padv_builtin_task_GenerateModelComparison_AHRS_Voter:
+    needs: [FindLibraryClones_AHRS_Voter]
     uses: ./.github/workflows/generic-job.yml
     with:
-      job-name: padv_builtin_task_GenerateModelComparison 
+      job-name: padv_builtin_task_GenerateModelComparison_AHRS_Voter 
   
-   padv_builtin_task_GenerateSDDReport:
-    needs: [padv_builtin_task_GenerateModelComparison]
+  padv_builtin_task_GenerateSDDReport_AHRS_Voter:
+    needs: [padv_builtin_task_GenerateModelComparison_AHRS_Voter]
     uses: ./.github/workflows/generic-job.yml
     with:
-      job-name: padv_builtin_task_GenerateSDDReport 
+      job-name: padv_builtin_task_GenerateSDDReport_AHRS_Voter 
   
-   padv_builtin_task_RunTestsPerTestCase:
-    needs: [padv_builtin_task_GenerateSDDReport]
+  padv_builtin_task_RunTestsPerTestCase_AHRS_Voter:
+    needs: [padv_builtin_task_GenerateSDDReport_AHRS_Voter]
     uses: ./.github/workflows/generic-job.yml
     with:
-      job-name: padv_builtin_task_RunTestsPerTestCase 
+      job-name: padv_builtin_task_RunTestsPerTestCase_AHRS_Voter 
   
-   padv_builtin_task_MergeTestResults:
-    needs: [padv_builtin_task_RunTestsPerTestCase]
+  padv_builtin_task_MergeTestResults_AHRS_Voter:
+    needs: [padv_builtin_task_RunTestsPerTestCase_AHRS_Voter]
     uses: ./.github/workflows/generic-job.yml
     with:
-      job-name: padv_builtin_task_MergeTestResults 
+      job-name: padv_builtin_task_MergeTestResults_AHRS_Voter 
   
-   ModelTestingMetrics:
-    needs: [padv_builtin_task_MergeTestResults]
+  ModelTestingMetrics_AHRS_Voter:
+    needs: [padv_builtin_task_MergeTestResults_AHRS_Voter]
     uses: ./.github/workflows/generic-job.yml
     with:
-      job-name: ModelTestingMetrics 
+      job-name: ModelTestingMetrics_AHRS_Voter 
+  
+  padv_builtin_task_GenerateSimulinkWebView_Actuator_Control:
+    needs: [start]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_GenerateSimulinkWebView_Actuator_Control 
+  
+  padv_builtin_task_RunModelStandards_Actuator_Control:
+    needs: [padv_builtin_task_GenerateSimulinkWebView_Actuator_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_RunModelStandards_Actuator_Control 
+  
+  FindAcrossModelClones_Actuator_Control:
+    needs: [padv_builtin_task_RunModelStandards_Actuator_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: FindAcrossModelClones_Actuator_Control 
+  
+  FindLibraryClones_Actuator_Control:
+    needs: [FindAcrossModelClones_Actuator_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: FindLibraryClones_Actuator_Control 
+  
+  padv_builtin_task_GenerateModelComparison_Actuator_Control:
+    needs: [FindLibraryClones_Actuator_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_GenerateModelComparison_Actuator_Control 
+  
+  padv_builtin_task_GenerateSDDReport_Actuator_Control:
+    needs: [padv_builtin_task_GenerateModelComparison_Actuator_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_GenerateSDDReport_Actuator_Control 
+  
+  ModelTestingMetrics_Actuator_Control:
+    needs: [padv_builtin_task_GenerateSDDReport_Actuator_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: ModelTestingMetrics_Actuator_Control 
+  
+  padv_builtin_task_GenerateSimulinkWebView_Flight_Control:
+    needs: [start]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_GenerateSimulinkWebView_Flight_Control 
+  
+  padv_builtin_task_RunModelStandards_Flight_Control:
+    needs: [padv_builtin_task_GenerateSimulinkWebView_Flight_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_RunModelStandards_Flight_Control 
+  
+  FindAcrossModelClones_Flight_Control:
+    needs: [padv_builtin_task_RunModelStandards_Flight_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: FindAcrossModelClones_Flight_Control 
+  
+  FindLibraryClones_Flight_Control:
+    needs: [FindAcrossModelClones_Flight_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: FindLibraryClones_Flight_Control 
+  
+  padv_builtin_task_GenerateModelComparison_Flight_Control:
+    needs: [FindLibraryClones_Flight_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_GenerateModelComparison_Flight_Control 
+  
+  padv_builtin_task_GenerateSDDReport_Flight_Control:
+    needs: [padv_builtin_task_GenerateModelComparison_Flight_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_GenerateSDDReport_Flight_Control 
+  
+  padv_builtin_task_GenerateSimulinkWebView_InnerLoop_Control:
+    needs: [start]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_GenerateSimulinkWebView_InnerLoop_Control 
+  
+  padv_builtin_task_RunModelStandards_InnerLoop_Control:
+    needs: [padv_builtin_task_GenerateSimulinkWebView_InnerLoop_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_RunModelStandards_InnerLoop_Control 
+  
+  FindAcrossModelClones_InnerLoop_Control:
+    needs: [padv_builtin_task_RunModelStandards_InnerLoop_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: FindAcrossModelClones_InnerLoop_Control 
+  
+  FindLibraryClones_InnerLoop_Control:
+    needs: [FindAcrossModelClones_InnerLoop_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: FindLibraryClones_InnerLoop_Control 
+  
+  padv_builtin_task_GenerateModelComparison_InnerLoop_Control:
+    needs: [FindLibraryClones_InnerLoop_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_GenerateModelComparison_InnerLoop_Control 
+  
+  padv_builtin_task_GenerateSDDReport_InnerLoop_Control:
+    needs: [padv_builtin_task_GenerateModelComparison_InnerLoop_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_GenerateSDDReport_InnerLoop_Control 
+  
+  ModelTestingMetrics_InnerLoop_Control:
+    needs: [padv_builtin_task_GenerateSDDReport_InnerLoop_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: ModelTestingMetrics_InnerLoop_Control 
+  
+  padv_builtin_task_GenerateSimulinkWebView_OuterLoop_Control:
+    needs: [start]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_GenerateSimulinkWebView_OuterLoop_Control 
+  
+  padv_builtin_task_RunModelStandards_OuterLoop_Control:
+    needs: [padv_builtin_task_GenerateSimulinkWebView_OuterLoop_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_RunModelStandards_OuterLoop_Control 
+  
+  FindAcrossModelClones_OuterLoop_Control:
+    needs: [padv_builtin_task_RunModelStandards_OuterLoop_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: FindAcrossModelClones_OuterLoop_Control 
+  
+  FindLibraryClones_OuterLoop_Control:
+    needs: [FindAcrossModelClones_OuterLoop_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: FindLibraryClones_OuterLoop_Control 
+  
+  padv_builtin_task_GenerateModelComparison_OuterLoop_Control:
+    needs: [FindLibraryClones_OuterLoop_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_GenerateModelComparison_OuterLoop_Control 
+  
+  padv_builtin_task_GenerateSDDReport_OuterLoop_Control:
+    needs: [padv_builtin_task_GenerateModelComparison_OuterLoop_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_GenerateSDDReport_OuterLoop_Control 
+  
+  padv_builtin_task_RunTestsPerTestCase_OuterLoop_Control:
+    needs: [padv_builtin_task_GenerateSDDReport_OuterLoop_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_RunTestsPerTestCase_OuterLoop_Control 
+  
+  padv_builtin_task_MergeTestResults_OuterLoop_Control:
+    needs: [padv_builtin_task_RunTestsPerTestCase_OuterLoop_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_MergeTestResults_OuterLoop_Control 
+  
+  ModelTestingMetrics_OuterLoop_Control:
+    needs: [padv_builtin_task_MergeTestResults_OuterLoop_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: ModelTestingMetrics_OuterLoop_Control 
+  
+  padv_builtin_task_GenerateRequirementsReport_HighLevelReqs:
+    needs: [ModelTestingMetrics_AHRS_Voter, ModelTestingMetrics_Actuator_Control, padv_builtin_task_GenerateSDDReport_Flight_Control, ModelTestingMetrics_InnerLoop_Control, ModelTestingMetrics_OuterLoop_Control]
+    uses: ./.github/workflows/generic-job.yml
+    with:
+      job-name: padv_builtin_task_GenerateRequirementsReport_HighLevelReqs 
   
